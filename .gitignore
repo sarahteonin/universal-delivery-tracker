@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.dist-info/
+
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfplan
+.crash
