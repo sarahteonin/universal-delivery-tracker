@@ -28,6 +28,16 @@ def lambda_handler(event, context):
                 "body": json.dumps({"error": "Missing tracking number"})
             }
         
+        user_id = "user1"  # Replace with real Cognito identity later
+        
+        # Check if delivery already exists
+        response = table.get_item(Key={"userId": user_id, "trackingNumber": tracking_number})
+        if "Item" in response:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({"error": "Delivery already exists"})
+            }
+
         # Get status via scraper based on courier
         if courier == "Shopee":
             latest_status = get_latest_status(tracking_number)
@@ -39,12 +49,12 @@ def lambda_handler(event, context):
             latest_status = "Courier not supported yet"
 
         delivery_id = str(uuid.uuid4())
-        user_id = "user1"  # Replace with real Cognito identity later
+        
 
         item = {
             "userId": user_id,
-            "deliveryId": delivery_id,
             "trackingNumber": tracking_number,
+            "deliveryId": delivery_id,
             "courier": courier,
             "latestStatus": latest_status,
             "statusHistory": statusHistory,
