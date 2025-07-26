@@ -58,7 +58,7 @@ def lambda_handler(event, context):
             "courier": courier,
             "latestStatus": latest_status,
             "statusHistory": statusHistory,
-            "createdAt": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "createdAt": datetime.now().astimezone(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'),
             "lastChecked": None
         }
 

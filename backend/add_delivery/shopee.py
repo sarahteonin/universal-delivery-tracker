@@ -1,8 +1,5 @@
 import requests
-from datetime import datetime
-
-
-base_url = "https://spx.sg/shipment/order/open/order/get_order_info?spx_tn="
+from datetime import datetime, timezone, timedelta
     
 def get_status_history(tracking_number):
     url = f"https://spx.sg/shipment/order/open/order/get_order_info?spx_tn={tracking_number}"
@@ -14,7 +11,7 @@ def get_status_history(tracking_number):
         
         for record in records:
             timestamp = record.get("actual_time")
-            timestamp = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = datetime.fromtimestamp(timestamp, tz=timezone.utc).astimezone(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
             description = record.get("buyer_description")
             status = record.get("milestone_name")
 
@@ -29,8 +26,7 @@ def get_status_history(tracking_number):
         return status_history
         
     except Exception as e:
-        print(f"Error scraping Shopee: {e}")
-        return "Error fetching status"
+        return f"Error scraping Shopee: {e}"
     
 
 def get_latest_status(tracking_number):
