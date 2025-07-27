@@ -2,6 +2,15 @@
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "delivery-tracker-api"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_methods = ["*"]
+    allow_headers = ["content-type"]
+    expose_headers = []
+    max_age        = 0
+    allow_credentials = false
+  }
 }
 
 # Allow API Gateway to call your Lambda
