@@ -9,7 +9,6 @@ export const AddDeliverySection: React.FC<AddDeliverySectionProps> = ({ onSubmit
   const [courier, setCourier] = useState("Shopee");
   const [trackingNumber, setTrackingNumber] = useState('');
 
-  console.log(courier)
 
   const handleSubmit = (e) => {
     e.preventDefault();

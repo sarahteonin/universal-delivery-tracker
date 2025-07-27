@@ -6,6 +6,7 @@ import { SavedDeliveriesSection } from './components/savedDeliveriesSection'
 
 function App() {
   const handleSubmit = async ({ trackingNumber, courier }) => {
+
     try {
       const res = await fetch('https://k70ddit3xh.execute-api.ap-southeast-1.amazonaws.com/track', {
         method: 'POST',
@@ -16,6 +17,8 @@ function App() {
       });
       
       const data = await res.json();
+      console.log(data);
+
 
       if (!res.ok) {
         alert(data.error);
