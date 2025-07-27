@@ -2,8 +2,9 @@ import json
 import uuid
 import boto3
 import os
-from datetime import datetime
-from shopee import get_status_history, get_latest_status
+from datetime import datetime, timezone, timedelta
+import shopee
+import ninjavan 
 
 dynamodb = boto3.resource('dynamodb')
 table_name = os.environ.get('TABLE_NAME')
@@ -40,11 +41,28 @@ def lambda_handler(event, context):
 
         # Get status via scraper based on courier
         if courier == "Shopee":
-            latest_status = get_latest_status(tracking_number)
-            statusHistory = get_status_history(tracking_number)
+            try:
+                latest_status = shopee.get_latest_status(tracking_number)
+                statusHistory = shopee.get_status_history(tracking_number)
+            except Exception as e:
+                return {
+                    "statusCode": 401,
+                    "body": json.dumps({"error": f"Delivery not found for Shopee"})
+                }
 
         #elif courier == "Lazada":
             #latest_status = lazada.get_latest_status(tracking_number)
+
+        elif courier == "NinjaVan":
+            try:
+                latest_status = ninjavan.get_latest_status(tracking_number)
+                statusHistory = ninjavan.get_status_history(tracking_number)
+            except Exception as e:
+                return {
+                    "statusCode": 401,
+                    "body": json.dumps({"error": f"Delivery not found for NinjaVan"})
+                }
+
         else:
             latest_status = "Courier not supported yet"
 
@@ -72,5 +90,5 @@ def lambda_handler(event, context):
     except Exception as e:
         return {
             "statusCode": 500,
-            "body": json.dumps({"error": str(e)})
+            "body": json.dumps({"error: Delivery not found"})
         }
